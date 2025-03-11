@@ -1,6 +1,5 @@
 import 'package:plo_driver_app/brand_colors.dart';
-import 'package:plo_driver_app/screens/loginpage.dart';
-import 'package:plo_driver_app/screens/mainpage.dart';
+import 'package:plo_driver_app/screens/login.dart';
 import 'package:plo_driver_app/screens/vehicleinfo.dart';
 import 'package:plo_driver_app/widgets/ProgressDialog.dart';
 import 'package:plo_driver_app/widgets/taxi_button.dart';
@@ -21,7 +20,7 @@ class RegistrationPage extends StatefulWidget {
 }
 
 class _RegistrationPageState extends State<RegistrationPage> {
-  final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   void showSnackBar(String title) {
     final snackBar = SnackBar(
@@ -234,7 +233,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   onPressed: () {
                     Navigator.pushNamedAndRemoveUntil(
                       context,
-                      Loginpage.id,
+                      LoginPage.id,
                       (route) => false,
                     );
                   },

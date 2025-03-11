@@ -6,7 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:plo_driver_app/screens/mainpage.dart';
 
 class VehicleInfoPage extends StatelessWidget {
-  final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   void showSnackBar(String title, BuildContext context) {
     final snackBar = SnackBar(
@@ -24,6 +24,8 @@ class VehicleInfoPage extends StatelessWidget {
   var carModelController = TextEditingController();
   var carColorController = TextEditingController();
   var vehicleNumberController = TextEditingController();
+
+  VehicleInfoPage({super.key});
 
   void updateProfile(BuildContext context) {
     String id = FirebaseAuth.instance.currentUser!.uid;

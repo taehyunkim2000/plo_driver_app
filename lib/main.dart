@@ -1,11 +1,12 @@
 import 'dart:io';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:plo_driver_app/screens/loginpage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:plo_driver_app/screens/login.dart';
 import 'package:plo_driver_app/screens/registration.dart';
 import 'package:plo_driver_app/screens/mainpage.dart';
 import 'package:plo_driver_app/screens/vehicleinfo.dart';
+import 'package:plo_driver_app/widgets/globalvariables.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,6 +28,8 @@ Future<void> main() async {
               databaseURL: 'https://geetaxi-aa379-default-rtdb.firebaseio.com',
             ),
   );
+
+  currentFirebaseUser = FirebaseAuth.instance.currentUser;
   runApp(const MyApp());
 }
 
@@ -36,16 +39,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
-
+        fontFamily: 'Brand-Regular',
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      initialRoute: RegistrationPage.id,
+      initialRoute: (currentFirebaseUser == null) ? LoginPage.id : Mainpage.id,
       routes: {
         Mainpage.id: (context) => Mainpage(),
-        Loginpage.id: (context) => Loginpage(),
+        LoginPage.id: (context) => LoginPage(),
         RegistrationPage.id: (context) => RegistrationPage(),
         VehicleInfoPage.id: (context) => VehicleInfoPage(),
       },
