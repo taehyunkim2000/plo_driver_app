@@ -10,6 +10,7 @@ import 'package:plo_driver_app/widgets/AvailibityButton.dart';
 import 'package:plo_driver_app/widgets/ConfirmSheet.dart';
 import 'package:plo_driver_app/widgets/taxi_button.dart';
 import '../globalVariables.dart';
+import 'package:get/get.dart';
 
 class Hometab extends StatefulWidget {
   const Hometab({super.key});
@@ -47,6 +48,7 @@ class _HometabState extends State<Hometab> {
   void initState() {
     super.initState();
     _checkLocationPermission();
+    _initializeGeofire();
   }
 
   Future<void> _checkLocationPermission() async {
@@ -60,6 +62,13 @@ class _HometabState extends State<Hometab> {
     if (permission == LocationPermission.deniedForever) {
       return Future.error('Location permissions are permanently denied');
     }
+  }
+
+  void _initializeGeofire() {
+    Geofire.initialize("driversAvailable");
+    tripRequestRef = FirebaseDatabase.instance.ref().child(
+      "drivers/${currentFirebaseUser?.uid}/newtrip",
+    );
   }
 
   @override
@@ -144,26 +153,58 @@ class _HometabState extends State<Hometab> {
   }
 
   void goOnline() {
-    Geofire.initialize("driversAvailable");
+    if (currentFirebaseUser == null) {
+      Get.snackbar(
+        '오류',
+        '로그인이 필요합니다.',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
+    if (currentPosition == null) {
+      Get.snackbar(
+        '오류',
+        '위치 정보를 가져올 수 없습니다. GPS가 활성화되어 있는지 확인해주세요.',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
     Geofire.setLocation(
       currentFirebaseUser!.uid,
       currentPosition!.latitude,
       currentPosition!.longitude,
     );
 
-    tripRequestRef = FirebaseDatabase.instance.ref().child(
-      "drivers/${currentFirebaseUser!.uid}/newtrip",
-    );
     tripRequestRef.set('waiting');
 
     tripRequestRef.onValue.listen((event) {});
   }
 
   void goOffline() {
-    Geofire.removeLocation(currentFirebaseUser!.uid);
-    tripRequestRef.onDisconnect();
-    tripRequestRef.remove();
-    homeTabPositionStream?.cancel();
+    try {
+      if (currentFirebaseUser != null) {
+        Geofire.removeLocation(currentFirebaseUser!.uid);
+      }
+
+      tripRequestRef.onDisconnect();
+      tripRequestRef.remove();
+
+      if (homeTabPositionStream != null) {
+        homeTabPositionStream?.cancel();
+      }
+    } catch (e) {
+      print("Error going offline: $e");
+      Get.snackbar(
+        '오류',
+        '오프라인 전환 중 문제가 발생했습니다.',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    }
   }
 
   void getLocationUpdates() {
