@@ -1,4 +1,3 @@
-import 'package:plo_driver_app/brand_colors.dart';
 import 'package:flutter/material.dart';
 
 class TaxiButton extends StatelessWidget {
@@ -22,7 +21,7 @@ class TaxiButton extends StatelessWidget {
         foregroundColor: Colors.white,
       ),
       onPressed: onPressed as VoidCallback,
-      child: Container(
+      child: SizedBox(
         height: 50,
         child: Center(
           child: Text(

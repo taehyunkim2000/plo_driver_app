@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "425631894947",
+    "firebase_url": "https://geetaxi-aa379-default-rtdb.firebaseio.com",
+    "project_id": "geetaxi-aa379",
+    "storage_bucket": "geetaxi-aa379.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:425631894947:android:dff55450334fed0295de16",
+        "android_client_info": {
+          "package_name": "com.example.cabrider"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAknGQdA7yAS5SICTW8lOKilEN7FBpNS-U"
+        },
+        {
+          "current_key": "AIzaSyC8c-k2yfQbyrnUlm4GL36KIzBPtwnP-B0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:425631894947:android:0737886cdaa53c5f95de16",
+        "android_client_info": {
+          "package_name": "com.example.plo_driver_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAknGQdA7yAS5SICTW8lOKilEN7FBpNS-U"
+        },
+        {
+          "current_key": "AIzaSyC8c-k2yfQbyrnUlm4GL36KIzBPtwnP-B0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
