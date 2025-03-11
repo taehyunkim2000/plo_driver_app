@@ -47,6 +47,15 @@ PODS:
     - leveldb-library (~> 1.22)
   - FirebaseSharedSwift (11.9.0)
   - Flutter (1.0.0)
+  - flutter_geofire (0.0.1):
+    - Flutter
+    - GeoFire (~> 5.0)
+  - GeoFire (5.0.0):
+    - GeoFire/Database (= 5.0.0)
+  - GeoFire/Database (5.0.0):
+    - Firebase/Database (< 12.0.0, > 7.0.0)
+    - GeoFire/Utils
+  - GeoFire/Utils (5.0.0)
   - geolocator_apple (1.2.0):
     - Flutter
   - Google-Maps-iOS-Utils (6.1.0):
@@ -92,6 +101,7 @@ DEPENDENCIES:
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_database (from `.symlinks/plugins/firebase_database/ios`)
   - Flutter (from `Flutter`)
+  - flutter_geofire (from `.symlinks/plugins/flutter_geofire/ios`)
   - geolocator_apple (from `.symlinks/plugins/geolocator_apple/ios`)
   - google_maps_flutter_ios (from `.symlinks/plugins/google_maps_flutter_ios/ios`)
 
@@ -106,6 +116,7 @@ SPEC REPOS:
     - FirebaseCoreInternal
     - FirebaseDatabase
     - FirebaseSharedSwift
+    - GeoFire
     - Google-Maps-iOS-Utils
     - GoogleMaps
     - GoogleUtilities
@@ -124,6 +135,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_database/ios"
   Flutter:
     :path: Flutter
+  flutter_geofire:
+    :path: ".symlinks/plugins/flutter_geofire/ios"
   geolocator_apple:
     :path: ".symlinks/plugins/geolocator_apple/ios"
   google_maps_flutter_ios:
@@ -144,6 +157,8 @@ SPEC CHECKSUMS:
   FirebaseDatabase: f86d3da3a67e41b551a84a8c5b081d0f86a5a896
   FirebaseSharedSwift: 574e6a5602afe4397a55c8d4f767382d620285de
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  flutter_geofire: 4db95c0e127d63d73f3025575062058c29934018
+  GeoFire: a579ffdcdcf6fe74ef9efd7f887d4082598d6d1f
   geolocator_apple: 1560c3c875af2a412242c7a923e15d0d401966ff
   Google-Maps-iOS-Utils: 0a484b05ed21d88c9f9ebbacb007956edd508a96
   google_maps_flutter_ios: 0291eb2aa252298a769b04d075e4a9d747ff7264
