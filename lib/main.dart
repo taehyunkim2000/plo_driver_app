@@ -2,7 +2,10 @@ import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'screens/mainpage.dart';
+import 'package:plo_driver_app/screens/loginpage.dart';
+import 'package:plo_driver_app/screens/registration.dart';
+import 'package:plo_driver_app/screens/mainpage.dart';
+import 'package:plo_driver_app/screens/vehicleinfo.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,8 +42,13 @@ class MyApp extends StatelessWidget {
 
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      initialRoute: Mainpage.id,
-      routes: {Mainpage.id: (context) => Mainpage()},
+      initialRoute: RegistrationPage.id,
+      routes: {
+        Mainpage.id: (context) => Mainpage(),
+        Loginpage.id: (context) => Loginpage(),
+        RegistrationPage.id: (context) => RegistrationPage(),
+        VehicleInfoPage.id: (context) => VehicleInfoPage(),
+      },
     );
   }
 }
