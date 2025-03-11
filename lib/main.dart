@@ -14,12 +14,14 @@ Future<void> main() async {
               appId: '1:425631894947:ios:e9b63aa2e048a45095de16',
               messagingSenderId: '425631894947',
               projectId: 'geetaxi-aa379',
+              databaseURL: 'https://geetaxi-aa379-default-rtdb.firebaseio.com',
             )
             : const FirebaseOptions(
               apiKey: 'AIzaSyAknGQdA7yAS5SICTW8lOKilEN7FBpNS-U',
-              appId: '1:425631894947:android:0737886cdaa53c5f95de16',
+              appId: '1:425631894947:android:783ac2ba27d2db6e95de16',
               messagingSenderId: '425631894947',
               projectId: 'geetaxi-aa379',
+              databaseURL: 'https://geetaxi-aa379-default-rtdb.firebaseio.com',
             ),
   );
   runApp(const MyApp());
