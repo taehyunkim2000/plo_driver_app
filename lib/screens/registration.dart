@@ -3,7 +3,7 @@ import 'package:plo_driver_app/screens/login.dart';
 import 'package:plo_driver_app/screens/vehicleinfo.dart';
 import 'package:plo_driver_app/widgets/ProgressDialog.dart';
 import 'package:plo_driver_app/widgets/taxi_button.dart';
-import 'package:plo_driver_app/widgets/globalvariables.dart';
+import 'package:plo_driver_app/globalVariables.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -56,8 +56,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
             )
             .catchError((ex) {
               Navigator.pop(context);
-              PlatformException thisEx = ex;
-              showSnackBar(thisEx.message ?? 'An error occurred');
+              if (ex is FirebaseAuthException) {
+                showSnackBar(ex.message ?? 'An error occurred');
+              } else {
+                showSnackBar('An error occurred during registration');
+              }
             })).user;
 
     Navigator.pop(context);

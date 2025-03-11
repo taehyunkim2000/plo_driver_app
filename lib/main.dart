@@ -6,7 +6,7 @@ import 'package:plo_driver_app/screens/login.dart';
 import 'package:plo_driver_app/screens/registration.dart';
 import 'package:plo_driver_app/screens/mainpage.dart';
 import 'package:plo_driver_app/screens/vehicleinfo.dart';
-import 'package:plo_driver_app/widgets/globalvariables.dart';
+import 'package:plo_driver_app/globalVariables.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
