@@ -7,6 +7,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:plo_driver_app/brand_colors.dart';
 import 'package:plo_driver_app/widgets/AvailibityButton.dart';
+import 'package:plo_driver_app/widgets/ConfirmSheet.dart';
 import 'package:plo_driver_app/widgets/taxi_button.dart';
 import '../globalVariables.dart';
 
@@ -23,6 +24,11 @@ class _HometabState extends State<Hometab> {
   Position? currentPosition;
 
   late DatabaseReference tripRequestRef;
+
+  String availabiltyTitle = 'GO ONLINE';
+  Color availabilityColor = BrandColors.colorOrange;
+
+  bool isAvailable = false;
 
   void getCurrentLocation() async {
     try {
@@ -87,10 +93,47 @@ class _HometabState extends State<Hometab> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               AvailabilityButton(
-                title: 'GO ONLINE',
-                color: BrandColors.colorOrange,
+                title: availabiltyTitle,
+                color: availabilityColor,
                 onPressed: () {
-                  goOnline();
+                  //goOnline();
+                  //getLocationUpdates();
+
+                  showModalBottomSheet(
+                    isDismissible: false,
+                    context: context,
+                    builder:
+                        (BuildContext context) => ConfirmSheet(
+                          title: (isAvailable) ? 'GO OFFLINE' : 'GO ONLINE',
+                          subtitle:
+                              (!isAvailable)
+                                  ? 'You are about to become available to receive trip requests'
+                                  : 'you will stop receiving new trip requests',
+
+                          onPressed: () {
+                            if (!isAvailable) {
+                              goOnline();
+                              getLocationUpdates();
+                              Navigator.pop(context);
+
+                              setState(() {
+                                availabilityColor = BrandColors.colorGreen;
+                                availabiltyTitle = 'GO OFFLINE';
+                                isAvailable = true;
+                              });
+                            } else {
+                              goOffline();
+                              Navigator.pop(context);
+
+                              setState(() {
+                                availabilityColor = BrandColors.colorOrange;
+                                availabiltyTitle = 'GO ONLINE';
+                                isAvailable = false;
+                              });
+                            }
+                          },
+                        ),
+                  );
                 },
               ),
             ],
@@ -114,5 +157,33 @@ class _HometabState extends State<Hometab> {
     tripRequestRef.set('waiting');
 
     tripRequestRef.onValue.listen((event) {});
+  }
+
+  void goOffline() {
+    Geofire.removeLocation(currentFirebaseUser!.uid);
+    tripRequestRef.onDisconnect();
+    tripRequestRef.remove();
+    homeTabPositionStream?.cancel();
+  }
+
+  void getLocationUpdates() {
+    homeTabPositionStream = Geolocator.getPositionStream(
+      locationSettings: LocationSettings(
+        accuracy: LocationAccuracy.bestForNavigation,
+        distanceFilter: 4,
+      ),
+    ).listen((Position position) {
+      currentPosition = position;
+      if (isAvailable) {
+        Geofire.setLocation(
+          currentFirebaseUser!.uid,
+          position.latitude,
+          position.longitude,
+        );
+      }
+
+      LatLng latLng = LatLng(position.latitude, position.longitude);
+      mapController.animateCamera(CameraUpdate.newLatLng(latLng));
+    });
   }
 }

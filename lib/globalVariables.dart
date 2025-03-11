@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 late User? currentFirebaseUser;
@@ -10,3 +13,5 @@ final CameraPosition googlePlex = const CameraPosition(
 );
 
 String mapKey = 'AIzaSyAknGQdA7yAS5SICTW8lOKilEN7FBpNS-U';
+
+StreamSubscription<Position>? homeTabPositionStream;
