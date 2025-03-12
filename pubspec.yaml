@@ -48,6 +48,8 @@ dependencies:
   animated_text_kit: ^4.2.3
   flutter_geofire: ^2.0.3
   get: ^4.6.6
+  firebase_messaging: ^15.2.4  #만약에 오류나면 ai가 추천해준 14.7.9로 바꾸기
+
 
 dev_dependencies:
   flutter_test:

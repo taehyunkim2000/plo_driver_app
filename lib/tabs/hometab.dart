@@ -1,11 +1,13 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_geofire/flutter_geofire.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:plo_driver_app/brand_colors.dart';
+import 'package:plo_driver_app/helpers/pushnotificationservice.dart';
 import 'package:plo_driver_app/widgets/AvailibityButton.dart';
 import 'package:plo_driver_app/widgets/ConfirmSheet.dart';
 import 'package:plo_driver_app/widgets/taxi_button.dart';
@@ -44,12 +46,22 @@ class _HometabState extends State<Hometab> {
     }
   }
 
+  void getCurrentDriverInfo() async {
+    currentFirebaseUser = FirebaseAuth.instance.currentUser;
+    PushNotificationService pushNotificationService = PushNotificationService();
+
+    pushNotificationService.initialize();
+    pushNotificationService.getToken();
+  }
+
   @override
   void initState() {
     super.initState();
     _checkLocationPermission();
     _initializeGeofire();
-  }
+    getCurrentDriverInfo();
+  } // getCurrentDriverInfo()의 initState 도 같이 하나로 묶음
+  // 만약에 뭔가 안되면 getCurrentDriverInfo 랑 initState랑 순서 바꿔보기
 
   Future<void> _checkLocationPermission() async {
     LocationPermission permission = await Geolocator.checkPermission();
