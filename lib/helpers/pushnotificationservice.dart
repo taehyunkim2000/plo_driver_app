@@ -7,7 +7,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:plo_driver_app/widgets/NotificationDialog.dart';
 import 'package:plo_driver_app/widgets/ProgressDialog.dart';
-import 'package:assets_audio_player/assets_audio_player.dart';
+import 'package:just_audio/just_audio.dart';
 
 class PushNotificationService {
   final FirebaseMessaging fcm = FirebaseMessaging.instance;
@@ -89,8 +89,9 @@ class PushNotificationService {
       if (snapshot.value != null) {
         final data = snapshot.value as Map<dynamic, dynamic>;
 
-        assetsAudioPlayer.open(Audio('sounds/alert.mp3'));
-        assetsAudioPlayer.play();
+        // Play notification sound
+        audioPlayer.setAsset('sounds/alert.mp3');
+        audioPlayer.play();
 
         double pickupLat = double.parse(
           data['location']['latitude'].toString(),

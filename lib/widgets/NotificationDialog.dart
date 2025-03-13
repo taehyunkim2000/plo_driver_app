@@ -104,7 +104,7 @@ class NotificationDialog extends StatelessWidget {
                         title: 'DECLINE',
                         color: BrandColors.colorPrimary,
                         onPressed: () async {
-                          assetsAudioPlayer.stop();
+                          audioPlayer.stop();
                           Navigator.pop(context);
                         },
                       ),
@@ -119,7 +119,7 @@ class NotificationDialog extends StatelessWidget {
                         title: 'ACCEPT',
                         color: BrandColors.colorGreen,
                         onPressed: () async {
-                          assetsAudioPlayer.stop();
+                          audioPlayer.stop();
                           checkAvailability(context);
                         },
                       ),
