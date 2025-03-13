@@ -1,26 +1,34 @@
 import 'dart:io';
-
+import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:plo_driver_app/datamodels/tripdetails.dart';
 import 'package:plo_driver_app/globalVariables.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:plo_driver_app/widgets/NotificationDialog.dart';
+import 'package:plo_driver_app/widgets/ProgressDialog.dart';
+import 'package:assets_audio_player/assets_audio_player.dart';
 
 class PushNotificationService {
   final FirebaseMessaging fcm = FirebaseMessaging.instance;
+  final BuildContext context;
 
-  Future<void> initialize() async {
+  PushNotificationService({required this.context});
+
+  Future<void> initialize(context) async {
     // 백그라운드 메시지 핸들러 설정
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
     // 포그라운드 메시지 핸들러 설정 - onMessage: 대신
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       print("onMessage: ${message.data}");
-      fetchRideInfo(getRideID(message.data));
+      fetchRideInfo(getRideID(message.data), context);
     });
 
     // 앱이 백그라운드에서 열릴 때 - onResume: 대신
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       print("onMessageOpenedApp: ${message.data}");
-      fetchRideInfo(getRideID(message.data));
+      fetchRideInfo(getRideID(message.data), context);
     });
 
     // 앱이 완전히 종료된 상태에서 알림을 통해 열렸는지 확인 - onLaunch: 대신
@@ -28,7 +36,7 @@ class PushNotificationService {
         await FirebaseMessaging.instance.getInitialMessage();
     if (initialMessage != null) {
       print("onLaunch: ${initialMessage.data}");
-      fetchRideInfo(getRideID(initialMessage.data));
+      fetchRideInfo(getRideID(initialMessage.data), context);
     }
 
     await getToken();
@@ -55,7 +63,7 @@ class PushNotificationService {
   String getRideID(Map<String, dynamic> message) {
     String rideID = '';
     if (Platform.isAndroid) {
-      rideID = message['ride_id'];
+      rideID = message['data']['ride_id'];
     } else {
       rideID = message['ride_id'];
       print('ride_id: $rideID');
@@ -63,13 +71,26 @@ class PushNotificationService {
     return rideID;
   }
 
-  void fetchRideInfo(String rideID) {
+  void fetchRideInfo(String rideID, context) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder:
+          (BuildContext context) => ProgressDialog(status: 'Fetching details'),
+    );
+
     DatabaseReference rideRef = FirebaseDatabase.instance.ref().child(
       'rideRequest/$rideID',
     );
     rideRef.once().then((DatabaseEvent event) {
-      if (event.snapshot.value != null) {
-        final data = event.snapshot.value as Map<dynamic, dynamic>;
+      Navigator.pop(context);
+      final DataSnapshot snapshot = event.snapshot;
+
+      if (snapshot.value != null) {
+        final data = snapshot.value as Map<dynamic, dynamic>;
+
+        assetsAudioPlayer.open(Audio('sounds/alert.mp3'));
+        assetsAudioPlayer.play();
 
         double pickupLat = double.parse(
           data['location']['latitude'].toString(),
@@ -88,7 +109,24 @@ class PushNotificationService {
         String destinationAddress = data['destination_address'].toString();
         String paymentMethod = data['payment_method'].toString();
 
-        print(pickupAddress);
+        TripDetails tripDetails = TripDetails();
+
+        tripDetails.rideID = rideID;
+        tripDetails.pickupAddress = pickupAddress;
+        tripDetails.destinationAddress = destinationAddress;
+        tripDetails.pickup = LatLng(pickupLat, pickupLng);
+        tripDetails.destination = LatLng(destinationLat, destinationLng);
+        tripDetails.paymentMethod = paymentMethod;
+
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder:
+              (BuildContext context) =>
+                  NotificationDialog(tripDetails: tripDetails),
+        );
+
+        // 여기서 context를 사용하여 네비게이션이나 다이얼로그 표시 가능
       }
     });
   }

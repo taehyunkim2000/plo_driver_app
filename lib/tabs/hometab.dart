@@ -10,6 +10,7 @@ import 'package:plo_driver_app/brand_colors.dart';
 import 'package:plo_driver_app/helpers/pushnotificationservice.dart';
 import 'package:plo_driver_app/widgets/AvailibityButton.dart';
 import 'package:plo_driver_app/widgets/ConfirmSheet.dart';
+import 'package:plo_driver_app/widgets/NotificationDialog.dart';
 import 'package:plo_driver_app/widgets/taxi_button.dart';
 import '../globalVariables.dart';
 import 'package:get/get.dart';
@@ -56,9 +57,11 @@ class _HometabState extends State<Hometab> {
 
   void getCurrentDriverInfo() async {
     currentFirebaseUser = FirebaseAuth.instance.currentUser;
-    PushNotificationService pushNotificationService = PushNotificationService();
+    PushNotificationService pushNotificationService = PushNotificationService(
+      context: context,
+    );
 
-    pushNotificationService.initialize();
+    pushNotificationService.initialize(context);
     pushNotificationService.getToken();
   }
 
