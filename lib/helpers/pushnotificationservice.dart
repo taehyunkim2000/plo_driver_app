@@ -8,34 +8,19 @@ class PushNotificationService {
   final FirebaseMessaging fcm = FirebaseMessaging.instance;
 
   Future<void> initialize() async {
-    // 알림 권한 요청
-    NotificationSettings settings = await fcm.requestPermission(
-      alert: true,
-      badge: true,
-      sound: true,
-    );
-
-    print('알림 권한 상태: ${settings.authorizationStatus}');
-
     // 백그라운드 메시지 핸들러 설정
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
     // 포그라운드 메시지 핸들러 설정 - onMessage: 대신
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       print("onMessage: ${message.data}");
-      if (Platform.isAndroid) {
-        String rideID = message.data['ride_id'];
-        print('ride_id: $rideID');
-      }
+      fetchRideInfo(getRideID(message.data));
     });
 
     // 앱이 백그라운드에서 열릴 때 - onResume: 대신
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       print("onMessageOpenedApp: ${message.data}");
-      if (Platform.isAndroid) {
-        String rideID = message.data['ride_id'];
-        print('ride_id: $rideID');
-      }
+      fetchRideInfo(getRideID(message.data));
     });
 
     // 앱이 완전히 종료된 상태에서 알림을 통해 열렸는지 확인 - onLaunch: 대신
@@ -43,10 +28,7 @@ class PushNotificationService {
         await FirebaseMessaging.instance.getInitialMessage();
     if (initialMessage != null) {
       print("onLaunch: ${initialMessage.data}");
-      if (Platform.isAndroid) {
-        String rideID = initialMessage.data['ride_id'];
-        print('ride_id: $rideID');
-      }
+      fetchRideInfo(getRideID(initialMessage.data));
     }
 
     await getToken();
@@ -68,6 +50,47 @@ class PushNotificationService {
       await fcm.subscribeToTopic('alldrivers');
       await fcm.subscribeToTopic('allusers');
     }
+  }
+
+  String getRideID(Map<String, dynamic> message) {
+    String rideID = '';
+    if (Platform.isAndroid) {
+      rideID = message['ride_id'];
+    } else {
+      rideID = message['ride_id'];
+      print('ride_id: $rideID');
+    }
+    return rideID;
+  }
+
+  void fetchRideInfo(String rideID) {
+    DatabaseReference rideRef = FirebaseDatabase.instance.ref().child(
+      'rideRequest/$rideID',
+    );
+    rideRef.once().then((DatabaseEvent event) {
+      if (event.snapshot.value != null) {
+        final data = event.snapshot.value as Map<dynamic, dynamic>;
+
+        double pickupLat = double.parse(
+          data['location']['latitude'].toString(),
+        );
+        double pickupLng = double.parse(
+          data['location']['longitude'].toString(),
+        );
+        String pickupAddress = data['pickup_address'].toString();
+
+        double destinationLat = double.parse(
+          data['destination']['latitude'].toString(),
+        );
+        double destinationLng = double.parse(
+          data['destination']['longitude'].toString(),
+        );
+        String destinationAddress = data['destination_address'].toString();
+        String paymentMethod = data['payment_method'].toString();
+
+        print(pickupAddress);
+      }
+    });
   }
 }
 
