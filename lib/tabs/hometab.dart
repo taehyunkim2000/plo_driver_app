@@ -46,6 +46,14 @@ class _HometabState extends State<Hometab> {
     }
   }
 
+  @override
+  void initState() {
+    super.initState();
+    _checkLocationPermission();
+    _initializeGeofire();
+    getCurrentDriverInfo();
+  }
+
   void getCurrentDriverInfo() async {
     currentFirebaseUser = FirebaseAuth.instance.currentUser;
     PushNotificationService pushNotificationService = PushNotificationService();
@@ -54,13 +62,13 @@ class _HometabState extends State<Hometab> {
     pushNotificationService.getToken();
   }
 
-  @override
-  void initState() {
-    super.initState();
-    _checkLocationPermission();
-    _initializeGeofire();
-    getCurrentDriverInfo();
-  } // getCurrentDriverInfo()의 initState 도 같이 하나로 묶음
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _checkLocationPermission();
+  //   _initializeGeofire();
+  //   getCurrentDriverInfo();
+  // } // getCurrentDriverInfo()의 initState 도 같이 하나로 묶음
   // 만약에 뭔가 안되면 getCurrentDriverInfo 랑 initState랑 순서 바꿔보기
 
   Future<void> _checkLocationPermission() async {
